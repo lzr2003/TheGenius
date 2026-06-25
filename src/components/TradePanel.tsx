@@ -14,6 +14,7 @@ export function TradePanel() {
           <div>{nameOf(trade.fromPlayerId)} → {nameOf(trade.toPlayerId)}</div>
           <p>提供 {trade.offeredCrystals} 晶石，索要 {trade.requestedCrystals} 晶石</p>
           <p>{trade.offeredInfo ?? '无公开情报'} / {trade.requestedInfo ?? '无请求情报'}</p>
+          <p className="muted">接受后会真实转移晶石；如果包含情报条款，会把秘密数字写入双方已知情报。</p>
           <strong>{trade.status}</strong>
           {trade.status === 'pending' && trade.toPlayerId === 'human' && (
             <div className="inline-actions">

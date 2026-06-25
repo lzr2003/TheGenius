@@ -3,7 +3,9 @@ import { randomNumber } from './mock';
 
 export function createDeathMatch(players: Player[]): DeathMatchState | undefined {
   const challenger = players.find((player) => player.status === 'danger');
-  const opponent = players.find((player) => player.status !== 'eliminated' && player.status !== 'safe' && player.id !== challenger?.id);
+  const protectedCandidates = players.filter((player) => player.status !== 'eliminated' && player.status !== 'safe' && player.id !== challenger?.id);
+  const fallbackCandidates = players.filter((player) => player.status !== 'eliminated' && player.id !== challenger?.id);
+  const opponent = protectedCandidates[0] ?? fallbackCandidates[0];
   if (!challenger || !opponent) return undefined;
 
   return {

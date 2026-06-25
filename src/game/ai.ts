@@ -1,5 +1,6 @@
 import type { ActionSubmission, ChatMessage, GameState, Player, TradeOffer } from './types';
 import { id, randomNumber } from './mock';
+import { ensureRelationships, mostTrustedCandidate, trustOf } from './relations';
 
 function activeTargets(state: GameState, self: Player): Player[] {
   return state.players.filter((player) => player.status !== 'eliminated' && player.id !== self.id);
@@ -7,7 +8,10 @@ function activeTargets(state: GameState, self: Player): Player[] {
 
 export function decideAiAction(state: GameState, player: Player): ActionSubmission {
   const targets = activeTargets(state, player);
-  const target = targets[randomNumber(0, Math.max(targets.length - 1, 0))];
+  const relationships = ensureRelationships(state);
+  const trustedTarget = mostTrustedCandidate(relationships, player.id, targets);
+  const randomTarget = targets[randomNumber(0, Math.max(targets.length - 1, 0))];
+  const target = player.personality === 'cooperative' ? trustedTarget ?? randomTarget : randomTarget;
 
   switch (player.personality) {
     case 'risky':
@@ -17,7 +21,7 @@ export function decideAiAction(state: GameState, player: Player): ActionSubmissi
     case 'deceptive':
       return randomNumber(1, 10) > 6 ? { playerId: player.id, kind: 'guess', targetPlayerId: target?.id, guessedNumber: randomNumber(1, 9) } : { playerId: player.id, kind: 'hold' };
     case 'cooperative':
-      return target && randomNumber(1, 10) > 7 ? { playerId: player.id, kind: 'swap', targetPlayerId: target.id } : { playerId: player.id, kind: 'hold' };
+      return target && trustOf(relationships, player.id, target.id) >= 55 && randomNumber(1, 10) > 7 ? { playerId: player.id, kind: 'swap', targetPlayerId: target.id } : { playerId: player.id, kind: 'hold' };
     case 'rational':
     default:
       if (player.secretNumber <= 3 && player.crystals > 1) return { playerId: player.id, kind: 'reroll' };
@@ -49,8 +53,12 @@ export function createAiChat(state: GameState, player: Player): ChatMessage {
 }
 
 export function createAiTrade(state: GameState, player: Player): TradeOffer | undefined {
-  const targets = activeTargets(state, player);
-  const target = targets.find((candidate) => candidate.isHuman) ?? targets[0];
+  const targets = activeTargets(state, player).filter((target) => target.status !== 'safe');
+  const relationships = ensureRelationships(state);
+  const human = targets.find((candidate) => candidate.isHuman);
+  const trusted = mostTrustedCandidate(relationships, player.id, targets);
+  const target = player.personality === 'cooperative' ? trusted ?? human : human ?? trusted;
+
   if (!target || player.crystals <= 1 || randomNumber(1, 10) < 7) return undefined;
 
   return {
@@ -59,8 +67,10 @@ export function createAiTrade(state: GameState, player: Player): TradeOffer | un
     toPlayerId: target.id,
     offeredCrystals: player.personality === 'cooperative' ? 2 : 1,
     requestedCrystals: 1,
-    offeredInfo: player.personality === 'deceptive' ? '可能的假情报' : `我的数字接近 ${player.secretNumber}`,
-    requestedInfo: '你的秘密数字线索',
+    offeredInfo: player.personality === 'deceptive' ? '我给你一个高价值数字线索，但你需要自己判断真假。' : `我愿意公开我的秘密数字。`,
+    requestedInfo: '请公开你的秘密数字。',
+    revealsOfferedSecret: true,
+    requestsTargetSecret: true,
     status: 'pending',
   };
 }

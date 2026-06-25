@@ -1,4 +1,5 @@
 import type { GameState, MatchLogEntry, Personality, Player } from './types';
+import { createRelationshipMatrix } from './relations';
 
 const names = ['Raven', 'Iris', 'Cipher', 'Mira', 'Noah', 'Vega', 'Echo', 'Luna', 'Orion', 'Sage', 'Kane', 'Nova', 'Aster'];
 const personalities: Personality[] = ['rational', 'deceptive', 'cooperative', 'risky', 'conservative'];
@@ -31,11 +32,13 @@ export function createPlayers(count: number): Player[] {
 }
 
 export function createInitialState(playerCount = 9): GameState {
+  const players = createPlayers(playerCount);
   return {
     matchId: id('match'),
     round: 1,
     phase: 'rule',
-    players: createPlayers(playerCount),
+    players,
+    relationships: createRelationshipMatrix(players),
     currentPlayerId: 'human',
     chatMessages: [],
     tradeOffers: [],

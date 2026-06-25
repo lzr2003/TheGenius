@@ -14,10 +14,27 @@ It is inspired by social strategy competition mechanics such as public rules, pr
 - Zustand
 - Tailwind CSS
 
+## Current gameplay mechanics
+
+- Round phase flow: rules, discussion, trade, action, settlement, safety, death match selection, death match, elimination.
+- Secret Number Market main game: each player has crystals and a hidden number; asset score is crystals plus hidden number.
+- Real trade settlement: accepted trades transfer crystals and can reveal hidden-number information to each side.
+- Relationship model: each directed player relationship tracks trust, betrayal, alliance score, and recent notes.
+- Safety token gifting: the main-game winner stays safe and can gift a safety token to another active player.
+- AI personality rules: rational, deceptive, cooperative, risky, and conservative AI players use different action, chat, and trade tendencies.
+- Death Match: a five-round psychological number guessing duel that eliminates the loser.
+- Local save/load through Tauri commands.
+
 ## Development
 
 ```bash
 npm install
+npm run dev
+```
+
+## Tauri desktop mode
+
+```bash
 npm run tauri dev
 ```
 

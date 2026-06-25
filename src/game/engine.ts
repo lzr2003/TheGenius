@@ -3,6 +3,7 @@ import { createAiChat, createAiTrade, decideAiAction } from './ai';
 import { createDeathMatch, playDeathMatchRound } from './deathmatch';
 import { createLog } from './mock';
 import { settleSecretNumberMarket } from './rules';
+import { autoGrantSafetyToken } from './safety';
 
 const phaseOrder: GamePhase[] = [
   'rule',
@@ -51,7 +52,23 @@ export function advanceGamePhase(state: GameState): GameState {
 
   if (state.phase === 'settlement') {
     const settled = settleSecretNumberMarket(state);
-    return { ...state, phase: 'safety', players: settled.players, roundResults: [...state.roundResults, settled.result], matchLog: [...state.matchLog, createLog('ROUND_SETTLED', settled.result.summary)] };
+    return {
+      ...state,
+      phase: 'safety',
+      players: settled.players,
+      safetyToken: settled.result.safetyPlayerId ? { ownerPlayerId: settled.result.safetyPlayerId, grantedAtRound: state.round } : undefined,
+      roundResults: [...state.roundResults, settled.result],
+      matchLog: [...state.matchLog, createLog('ROUND_SETTLED', settled.result.summary)],
+    };
+  }
+
+  if (state.phase === 'safety') {
+    const afterAutoGrant = autoGrantSafetyToken(state);
+    return {
+      ...afterAutoGrant,
+      phase: 'deathmatch_select',
+      matchLog: [...afterAutoGrant.matchLog, createLog('PHASE_CHANGED', '安全权阶段结束，进入死亡竞赛选择。')],
+    };
   }
 
   if (state.phase === 'deathmatch_select') {
@@ -67,7 +84,7 @@ export function advanceGamePhase(state: GameState): GameState {
   if (state.phase === 'elimination') {
     const loserId = state.deathMatch?.loserId;
     const players = state.players.map((player) => player.id === loserId ? { ...player, status: 'eliminated' as const, crystals: 0 } : { ...player, status: player.status === 'eliminated' ? 'eliminated' as const : 'active' as const });
-    return { ...state, round: state.round + 1, phase: 'rule', players, actionSubmissions: [], tradeOffers: [], deathMatch: undefined, matchLog: [...state.matchLog, createLog('PLAYER_ELIMINATED', '死亡竞赛失败者已淘汰，进入下一轮。')] };
+    return { ...state, round: state.round + 1, phase: 'rule', players, safetyToken: undefined, actionSubmissions: [], tradeOffers: [], deathMatch: undefined, matchLog: [...state.matchLog, createLog('PLAYER_ELIMINATED', '死亡竞赛失败者已淘汰，进入下一轮。')] };
   }
 
   const index = phaseOrder.indexOf(state.phase);

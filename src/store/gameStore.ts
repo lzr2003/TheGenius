@@ -2,6 +2,9 @@ import { invoke } from '@tauri-apps/api/core';
 import { create } from 'zustand';
 import { advanceGamePhase } from '../game/engine';
 import { createInitialState, createLog, id } from '../game/mock';
+import { createRelationshipMatrix } from '../game/relations';
+import { grantSafetyToken } from '../game/safety';
+import { acceptTradeSettlement, rejectTradeSettlement } from '../game/trade';
 import type { ActionKind, GameState } from '../game/types';
 
 interface GameStore {
@@ -12,8 +15,16 @@ interface GameStore {
   sendChat: (content: string) => void;
   acceptTrade: (tradeId: string) => void;
   rejectTrade: (tradeId: string) => void;
+  grantSafety: (targetPlayerId: string) => void;
   saveGame: () => Promise<void>;
   loadGame: () => Promise<void>;
+}
+
+function normalizeLoadedState(state: GameState): GameState {
+  return {
+    ...state,
+    relationships: state.relationships?.length ? state.relationships : createRelationshipMatrix(state.players),
+  };
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -42,21 +53,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     },
   })),
 
-  acceptTrade: (tradeId) => set((store) => ({
-    state: {
-      ...store.state,
-      tradeOffers: store.state.tradeOffers.map((offer) => offer.id === tradeId ? { ...offer, status: 'accepted' } : offer),
-      matchLog: [...store.state.matchLog, createLog('TRADE_ACCEPTED', '交易已接受。')],
-    },
-  })),
+  acceptTrade: (tradeId) => set((store) => ({ state: acceptTradeSettlement(store.state, tradeId) })),
 
-  rejectTrade: (tradeId) => set((store) => ({
-    state: {
-      ...store.state,
-      tradeOffers: store.state.tradeOffers.map((offer) => offer.id === tradeId ? { ...offer, status: 'rejected' } : offer),
-      matchLog: [...store.state.matchLog, createLog('TRADE_REJECTED', '交易已拒绝。')],
-    },
-  })),
+  rejectTrade: (tradeId) => set((store) => ({ state: rejectTradeSettlement(store.state, tradeId) })),
+
+  grantSafety: (targetPlayerId) => set((store) => ({ state: grantSafetyToken(store.state, targetPlayerId) })),
 
   saveGame: async () => {
     const stateJson = JSON.stringify(get().state);
@@ -65,6 +66,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   loadGame: async () => {
     const stateJson = await invoke<string>('load_game_state');
-    set({ state: JSON.parse(stateJson) as GameState });
+    set({ state: normalizeLoadedState(JSON.parse(stateJson) as GameState) });
   },
 }));

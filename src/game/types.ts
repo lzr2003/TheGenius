@@ -27,6 +27,21 @@ export interface Player {
   personality?: Personality;
 }
 
+export interface PlayerRelation {
+  fromPlayerId: string;
+  toPlayerId: string;
+  trust: number;
+  betrayal: number;
+  alliance: number;
+  notes: string[];
+}
+
+export interface SafetyToken {
+  ownerPlayerId: string;
+  grantedAtRound: number;
+  recipientPlayerId?: string;
+}
+
 export interface ChatMessage {
   id: string;
   playerId: string;
@@ -44,6 +59,8 @@ export interface TradeOffer {
   requestedCrystals: number;
   offeredInfo?: string;
   requestedInfo?: string;
+  revealsOfferedSecret?: boolean;
+  requestsTargetSecret?: boolean;
   status: 'pending' | 'accepted' | 'rejected' | 'cancelled';
 }
 
@@ -97,9 +114,11 @@ export type LogType =
   | 'TRADE_CREATED'
   | 'TRADE_ACCEPTED'
   | 'TRADE_REJECTED'
+  | 'TRADE_CANCELLED'
   | 'ACTION_SUBMITTED'
   | 'ROUND_SETTLED'
   | 'SAFETY_GRANTED'
+  | 'RELATION_CHANGED'
   | 'DEATHMATCH_STARTED'
   | 'DEATHMATCH_ROUND_RESULT'
   | 'PLAYER_ELIMINATED'
@@ -117,6 +136,8 @@ export interface GameState {
   round: number;
   phase: GamePhase;
   players: Player[];
+  relationships: PlayerRelation[];
+  safetyToken?: SafetyToken;
   currentPlayerId: string;
   chatMessages: ChatMessage[];
   tradeOffers: TradeOffer[];

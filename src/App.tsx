@@ -5,6 +5,8 @@ import { ActionPanel } from './components/ActionPanel';
 import { ChatPanel } from './components/ChatPanel';
 import { DeathMatchPanel } from './components/DeathMatchPanel';
 import { ResultPanel } from './components/ResultPanel';
+import { RelationPanel } from './components/RelationPanel';
+import { SafetyPanel } from './components/SafetyPanel';
 import { useGameStore } from './store/gameStore';
 
 const phaseNames: Record<string, string> = {
@@ -30,7 +32,7 @@ function App() {
         <div>
           <p className="eyebrow">Mind Arena / 智谋竞技场</p>
           <h1>心理博弈桌游客户端原型</h1>
-          <p className="subtitle">公开规则、隐藏信息、晶石交易、安全权、死亡竞赛与淘汰制。</p>
+          <p className="subtitle">公开规则、隐藏信息、晶石交易、信任背叛、安全权赠送、死亡竞赛与淘汰制。</p>
         </div>
         <div className="hero-actions">
           <button onClick={() => createNewGame(9)}>新开 9 人局</button>
@@ -59,12 +61,13 @@ function App() {
         <PlayerPanel />
         <section className="center-stack">
           <RulePanel />
-          {state.phase === 'deathmatch' ? <DeathMatchPanel /> : <ActionPanel />}
+          {state.phase === 'safety' ? <SafetyPanel /> : state.phase === 'deathmatch' ? <DeathMatchPanel /> : <ActionPanel />}
           <ResultPanel />
         </section>
         <section className="right-stack">
           <TradePanel />
           <ChatPanel />
+          <RelationPanel />
         </section>
       </section>
     </main>

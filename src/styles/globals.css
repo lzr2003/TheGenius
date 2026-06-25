@@ -20,7 +20,7 @@ input, select { width: 100%; border: 1px solid rgba(255,255,255,0.12); backgroun
 .eyebrow { color: #f4c76f; letter-spacing: .18em; text-transform: uppercase; font-size: 12px; margin: 0 0 10px; }
 h1 { margin: 0; font-size: 34px; }
 .subtitle { color: rgba(246,240,223,0.7); margin: 10px 0 0; }
-.hero-actions, .inline-actions, .chat-input { display: flex; gap: 10px; }
+.hero-actions, .inline-actions, .chat-input, .grant-row { display: flex; gap: 10px; }
 .topbar { display: grid; grid-template-columns: repeat(4, 1fr); align-items: center; padding: 16px; margin-bottom: 16px; }
 .topbar span { color: rgba(246,240,223,0.55); display: block; font-size: 12px; }
 .topbar strong { font-size: 22px; }
@@ -39,12 +39,14 @@ h1 { margin: 0; font-size: 34px; }
 .player-score { text-align: right; }
 .player-score strong { display: block; font-size: 20px; }
 .rule-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px; }
-.rule-grid div, .settlement-card, .trade-card { border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.055); border-radius: 18px; padding: 14px; }
-.rule-grid span { display: block; color: rgba(246,240,223,.56); }
+.rule-grid div, .settlement-card, .trade-card, .safety-token-card, .relation-card { border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.055); border-radius: 18px; padding: 14px; }
+.rule-grid span, .safety-token-card span { display: block; color: rgba(246,240,223,.56); }
 .rule-grid strong { font-size: 32px; }
+.safety-token-card strong { font-size: 28px; color: #f4c76f; }
+.success-text { color: #47daa6; font-weight: 800; }
 .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
-.action-panel { display: grid; gap: 12px; }
-.trade-panel, .chat-panel, .result-panel { display: grid; gap: 10px; }
+.action-panel, .safety-panel { display: grid; gap: 12px; }
+.trade-panel, .chat-panel, .result-panel, .relation-panel { display: grid; gap: 10px; }
 .trade-card p, .chat-message p, .log-list p { margin: 6px 0; color: rgba(246,240,223,.72); }
 .chat-list, .log-list, .death-history { max-height: 280px; overflow: auto; display: grid; gap: 8px; }
 .chat-message { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
@@ -53,3 +55,9 @@ h1 { margin: 0; font-size: 34px; }
 .duel-board div { text-align: center; padding: 18px; border-radius: 18px; background: rgba(255,255,255,.06); }
 .duel-board strong { display: block; font-size: 42px; color: #f4c76f; }
 .versus { color: #8f6cff; font-weight: 900; }
+.relation-card { display: grid; gap: 8px; }
+.relation-card > div:first-child { display: flex; justify-content: space-between; gap: 10px; }
+.relation-card span { color: #8fd7ff; }
+.relation-bars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; color: rgba(246,240,223,.72); font-size: 12px; }
+.relation-bars p { margin: 0; }
+.relation-card small { color: rgba(246,240,223,.52); }
