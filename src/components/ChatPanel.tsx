@@ -10,11 +10,12 @@ export function ChatPanel() {
   const [claimedNumber, setClaimedNumber] = useState<number | ''>('');
   const human = state.players.find((player) => player.id === 'human');
   const privateTargets = state.players.filter((player) => player.id !== 'human' && player.status !== 'eliminated');
+  const selectedPrivateTargetId = targetPlayerId || (privateTargets[0]?.id ?? '');
   const nameOf = (id: string) => state.players.find((player) => player.id === id)?.name ?? id;
   const visibleMessages = state.chatMessages.filter((message) => !message.channel || message.channel === 'public' || message.playerId === 'human' || message.toPlayerId === 'human').slice(-8);
 
   function send() {
-    const toPlayerId = mode === 'private' ? targetPlayerId || privateTargets[0]?.id : undefined;
+    const toPlayerId = mode === 'private' ? selectedPrivateTargetId || undefined : undefined;
     const claimed = mode === 'private' && claimedNumber !== '' ? Number(claimedNumber) : undefined;
     const trimmed = content.trim();
     if (!trimmed && typeof claimed !== 'number') return;
@@ -46,7 +47,7 @@ export function ChatPanel() {
             <option value="private">私聊</option>
           </select>
           {mode === 'private' && (
-            <select value={targetPlayerId || privateTargets[0]?.id ?? ''} onChange={(event) => setTargetPlayerId(event.target.value)}>
+            <select value={selectedPrivateTargetId} onChange={(event) => setTargetPlayerId(event.target.value)}>
               {privateTargets.map((target) => <option value={target.id} key={target.id}>{target.name}</option>)}
             </select>
           )}
