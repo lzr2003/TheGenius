@@ -11,6 +11,7 @@ body { margin: 0; min-width: 1180px; min-height: 100vh; background: radial-gradi
 button, input, select { font: inherit; }
 button { border: 1px solid rgba(244, 199, 111, 0.3); background: rgba(255, 255, 255, 0.06); color: #f6f0df; border-radius: 12px; padding: 10px 14px; cursor: pointer; transition: 0.18s ease; }
 button:hover, button.selected { border-color: #f4c76f; background: rgba(244, 199, 111, 0.16); }
+button:disabled, input:disabled, select:disabled { opacity: .42; cursor: not-allowed; }
 button.primary { background: linear-gradient(135deg, #f4c76f, #8f6cff); color: #10111d; border: none; font-weight: 800; }
 input, select { width: 100%; border: 1px solid rgba(255,255,255,0.12); background: rgba(5, 7, 14, 0.75); color: #f6f0df; border-radius: 12px; padding: 10px 12px; }
 
@@ -39,11 +40,17 @@ h1 { margin: 0; font-size: 34px; }
 .player-score { text-align: right; }
 .player-score strong { display: block; font-size: 20px; }
 .rule-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 14px; }
-.rule-grid div, .settlement-card, .trade-card, .safety-token-card, .relation-card { border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.055); border-radius: 18px; padding: 14px; }
+.rule-grid div, .settlement-card, .trade-card, .safety-token-card, .relation-card, .submitted-preview, .phase-hint { border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.055); border-radius: 18px; padding: 14px; }
 .rule-grid span, .safety-token-card span { display: block; color: rgba(246,240,223,.56); }
 .rule-grid strong { font-size: 32px; }
 .safety-token-card strong { font-size: 28px; color: #f4c76f; }
 .success-text { color: #47daa6; font-weight: 800; }
+.phase-hint { color: rgba(246,240,223,.72); }
+.phase-hint.active { color: #47daa6; border-color: rgba(71,218,166,.35); }
+.submitted-preview { display: grid; gap: 6px; color: rgba(246,240,223,.78); }
+.submitted-preview strong { color: #f4c76f; }
+.score-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.score-list span { padding: 5px 8px; border-radius: 999px; background: rgba(255,255,255,.08); color: rgba(246,240,223,.76); font-size: 12px; }
 .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
 .action-panel, .safety-panel { display: grid; gap: 12px; }
 .trade-panel, .chat-panel, .result-panel, .relation-panel { display: grid; gap: 10px; }

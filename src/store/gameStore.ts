@@ -27,6 +27,15 @@ function normalizeLoadedState(state: GameState): GameState {
   };
 }
 
+function resolveActionSubmission(state: GameState): GameState {
+  if (state.phase !== 'action') return state;
+
+  const settlementState = advanceGamePhase(state);
+  if (settlementState.phase !== 'settlement') return settlementState;
+
+  return advanceGamePhase(settlementState);
+}
+
 export const useGameStore = create<GameStore>((set, get) => ({
   state: createInitialState(),
 
@@ -35,14 +44,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
   advancePhase: () => set((store) => ({ state: advanceGamePhase(store.state) })),
 
   submitHumanAction: (kind, targetPlayerId, guessedNumber) => set((store) => {
+    if (store.state.phase !== 'action') {
+      return {
+        state: {
+          ...store.state,
+          matchLog: [...store.state.matchLog, createLog('ACTION_SUBMITTED', '当前不是行动提交阶段，行动未生效。请先推进到行动提交阶段。')],
+        },
+      };
+    }
+
     const filtered = store.state.actionSubmissions.filter((action) => action.playerId !== 'human');
-    return {
-      state: {
-        ...store.state,
-        actionSubmissions: [...filtered, { playerId: 'human', kind, targetPlayerId, guessedNumber }],
-        matchLog: [...store.state.matchLog, createLog('ACTION_SUBMITTED', `你已提交行动：${kind}`)],
-      },
+    const nextState: GameState = {
+      ...store.state,
+      actionSubmissions: [...filtered, { playerId: 'human', kind, targetPlayerId, guessedNumber }],
+      matchLog: [...store.state.matchLog, createLog('ACTION_SUBMITTED', `你已提交行动：${kind}，系统正在结算本轮。`)],
     };
+
+    return { state: resolveActionSubmission(nextState) };
   }),
 
   sendChat: (content) => set((store) => ({
