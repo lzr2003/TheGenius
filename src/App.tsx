@@ -7,6 +7,7 @@ import { DeathMatchPanel } from './components/DeathMatchPanel';
 import { ResultPanel } from './components/ResultPanel';
 import { SafetyPanel } from './components/SafetyPanel';
 import { SettingsPanel } from './components/SettingsPanel';
+import { PrivateInfoPanel } from './components/PrivateInfoPanel';
 import { useGameStore } from './store/gameStore';
 import { isSoundEnabled, playSfx, setSoundEnabled } from './utils/audio';
 
@@ -64,7 +65,10 @@ function App() {
       <section className="game-layout common-game-layout no-rule-sidebar">
         <aside className="left-rail layout-region"><PlayerPanel /></aside>
         <section className="main-stage layout-region">
-          {state.phase === 'safety' ? <SafetyPanel /> : state.phase === 'deathmatch' ? <DeathMatchPanel /> : <ActionPanel />}
+          <PrivateInfoPanel />
+          <div className="phase-stage">
+            {state.phase === 'safety' ? <SafetyPanel /> : state.phase === 'deathmatch' ? <DeathMatchPanel /> : <ActionPanel />}
+          </div>
         </section>
         <aside className="right-rail layout-region"><TradePanel /></aside>
         <section className="bottom-console layout-region"><ResultPanel /><ChatPanel /></section>

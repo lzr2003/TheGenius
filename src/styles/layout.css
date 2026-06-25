@@ -67,7 +67,13 @@
 }
 .layout-region { min-width: 0; min-height: 0; overflow: hidden; }
 .left-rail { grid-area: players; }
-.main-stage { grid-area: stage; }
+.main-stage {
+  grid-area: stage;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 12px;
+}
+.phase-stage { min-width: 0; min-height: 0; overflow: hidden; }
 .right-rail {
   grid-area: side;
   display: grid;
@@ -81,7 +87,7 @@
   gap: 12px;
 }
 
-.main-stage > .panel,
+.phase-stage > .panel,
 .left-rail > .panel,
 .right-rail > .panel,
 .bottom-console > .panel { height: 100%; }
@@ -92,6 +98,52 @@
 .action-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .action-grid button { white-space: normal; }
 .submitted-preview { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+
+.private-info-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(180px, 1.2fr);
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+}
+.private-info-panel div {
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.055);
+  border-radius: 16px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+.private-info-panel span,
+.rule-formula-card span {
+  display: block;
+  color: rgba(246,240,223,.56);
+  font-size: 12px;
+}
+.private-info-panel strong {
+  display: block;
+  color: #f4c76f;
+  font-size: 24px;
+  line-height: 1.1;
+}
+.private-info-panel p {
+  margin: 0;
+  color: rgba(246,240,223,.68);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.rule-formula-card {
+  border: 1px solid rgba(244,199,111,.22);
+  background: rgba(244,199,111,.08);
+  border-radius: 16px;
+  padding: 12px;
+  margin: 10px 0;
+}
+.rule-formula-card strong {
+  display: block;
+  color: #f4c76f;
+  font-size: 20px;
+  margin-top: 4px;
+}
 
 .settings-overlay {
   position: fixed;
@@ -162,12 +214,18 @@
     grid-template-columns: minmax(215px, 245px) minmax(500px, 1.2fr) minmax(260px, 300px);
   }
   .right-rail,
-  .bottom-console { gap: 10px; }
+  .bottom-console,
+  .main-stage { gap: 10px; }
   .header-actions { max-width: 470px; }
+  .private-info-panel { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .private-info-panel p { grid-column: 1 / -1; }
 }
 
 @media (max-height: 820px) {
   .game-header { padding: 11px 16px; }
   .common-game-layout { grid-template-rows: minmax(0, 1fr) minmax(128px, 170px); }
   .settings-drawer { padding: 14px; gap: 10px; }
+  .private-info-panel { padding: 10px 12px; }
+  .private-info-panel strong { font-size: 21px; }
+  .private-info-panel p { display: none; }
 }
