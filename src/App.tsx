@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { PlayerPanel } from './components/PlayerPanel';
 import { RulePanel } from './components/RulePanel';
 import { TradePanel } from './components/TradePanel';
@@ -8,6 +9,7 @@ import { ResultPanel } from './components/ResultPanel';
 import { RelationPanel } from './components/RelationPanel';
 import { SafetyPanel } from './components/SafetyPanel';
 import { useGameStore } from './store/gameStore';
+import { isSoundEnabled, playSfx, setSoundEnabled } from './utils/audio';
 
 const phaseNames: Record<string, string> = {
   setup: '玩家配置',
@@ -25,6 +27,14 @@ const phaseNames: Record<string, string> = {
 
 function App() {
   const { state, createNewGame, advancePhase, saveGame, loadGame } = useGameStore();
+  const [soundOn, setSoundOn] = useState(isSoundEnabled());
+
+  function toggleSound() {
+    const next = !soundOn;
+    setSoundEnabled(next);
+    setSoundOn(next);
+    if (next) playSfx('phase');
+  }
 
   return (
     <main className="app-shell">
@@ -38,6 +48,7 @@ function App() {
           <button onClick={() => createNewGame(9)}>新开 9 人局</button>
           <button onClick={loadGame}>读取存档</button>
           <button onClick={saveGame}>保存</button>
+          <button onClick={toggleSound}>{soundOn ? '音效：开' : '音效：关'}</button>
         </div>
       </section>
 

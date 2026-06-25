@@ -13,6 +13,7 @@ It is inspired by social strategy competition mechanics such as public rules, pr
 - Vite
 - Zustand
 - Tailwind CSS
+- Browser Web Audio API procedural sound effects
 
 ## Current gameplay mechanics
 
@@ -23,6 +24,7 @@ It is inspired by social strategy competition mechanics such as public rules, pr
 - Safety token gifting: the main-game winner stays safe and can gift a safety token to another active player.
 - AI personality rules: rational, deceptive, cooperative, risky, and conservative AI players use different action, chat, and trade tendencies.
 - Death Match: a five-round psychological number guessing duel that eliminates the loser.
+- Procedural UI sound effects for clicks, phase changes, submissions, settlement, trade, safety, death match, and elimination.
 - Local save/load through Tauri commands.
 
 ## Development
