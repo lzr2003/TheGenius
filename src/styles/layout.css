@@ -27,6 +27,17 @@
   max-width: 560px;
 }
 .header-actions button { white-space: nowrap; padding-inline: 11px; }
+.compact-header { grid-template-columns: minmax(0, 1fr) 52px; }
+.settings-icon-button {
+  width: 48px;
+  height: 48px;
+  min-height: 48px;
+  padding: 0;
+  border-radius: 16px;
+  font-size: 24px;
+  display: grid;
+  place-items: center;
+}
 
 .status-strip {
   display: grid;
@@ -51,13 +62,16 @@
   gap: 12px;
   overflow: hidden;
 }
+.common-game-layout.no-rule-sidebar {
+  grid-template-columns: minmax(230px, 270px) minmax(560px, 1.25fr) minmax(290px, 340px);
+}
 .layout-region { min-width: 0; min-height: 0; overflow: hidden; }
 .left-rail { grid-area: players; }
 .main-stage { grid-area: stage; }
 .right-rail {
   grid-area: side;
   display: grid;
-  grid-template-rows: minmax(132px, .72fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   gap: 12px;
 }
 .bottom-console {
@@ -79,11 +93,73 @@
 .action-grid button { white-space: normal; }
 .submitted-preview { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
 
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(2, 4, 10, .56);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px;
+}
+.settings-drawer {
+  width: min(520px, 100%);
+  height: 100%;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(17, 22, 43, .96), rgba(8, 10, 20, .96));
+  box-shadow: -24px 0 80px rgba(0,0,0,.45);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px;
+  overflow: hidden;
+}
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+}
+.settings-header h2 { margin: 0; font-size: 26px; }
+.settings-close-button {
+  width: 42px;
+  height: 42px;
+  min-height: 42px;
+  border-radius: 14px;
+  padding: 0;
+  font-size: 26px;
+  line-height: 1;
+}
+.settings-section {
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  background: rgba(255,255,255,.045);
+  padding: 14px;
+  min-height: 0;
+}
+.settings-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.settings-rule-section {
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.settings-rule-section .rule-panel { height: 100%; }
+
 @media (max-width: 1360px) {
   .common-game-layout {
     grid-template-columns: minmax(215px, 245px) minmax(480px, 1fr) minmax(280px, 320px);
     grid-template-rows: minmax(0, 1fr) minmax(145px, 195px);
     gap: 10px;
+  }
+  .common-game-layout.no-rule-sidebar {
+    grid-template-columns: minmax(215px, 245px) minmax(500px, 1.2fr) minmax(260px, 300px);
   }
   .right-rail,
   .bottom-console { gap: 10px; }
@@ -93,5 +169,5 @@
 @media (max-height: 820px) {
   .game-header { padding: 11px 16px; }
   .common-game-layout { grid-template-rows: minmax(0, 1fr) minmax(128px, 170px); }
-  .right-rail { grid-template-rows: minmax(96px, .56fr) minmax(0, 1fr); }
+  .settings-drawer { padding: 14px; gap: 10px; }
 }
