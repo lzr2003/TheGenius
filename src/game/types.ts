@@ -77,7 +77,10 @@ export interface RoundScore {
   playerId: string;
   crystals: number;
   secretNumber: number;
+  roundPoints: number;
   score: number;
+  actionBonus: number;
+  riskDelta: number;
   delta: number;
 }
 
@@ -137,6 +140,7 @@ export interface GameState {
   phase: GamePhase;
   players: Player[];
   relationships: PlayerRelation[];
+  roundPoints: Record<string, number>;
   safetyToken?: SafetyToken;
   currentPlayerId: string;
   chatMessages: ChatMessage[];

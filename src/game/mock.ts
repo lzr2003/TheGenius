@@ -31,6 +31,10 @@ export function createPlayers(count: number): Player[] {
   }));
 }
 
+function createRoundPoints(players: Player[]): Record<string, number> {
+  return Object.fromEntries(players.map((player) => [player.id, 0]));
+}
+
 export function createInitialState(playerCount = 9): GameState {
   const players = createPlayers(playerCount);
   return {
@@ -39,6 +43,7 @@ export function createInitialState(playerCount = 9): GameState {
     phase: 'rule',
     players,
     relationships: createRelationshipMatrix(players),
+    roundPoints: createRoundPoints(players),
     currentPlayerId: 'human',
     chatMessages: [],
     tradeOffers: [],

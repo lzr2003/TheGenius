@@ -18,7 +18,8 @@ It is inspired by social strategy competition mechanics such as public rules, pr
 ## Current gameplay mechanics
 
 - Round phase flow: rules, discussion, trade, action, settlement, safety, death match selection, death match, elimination.
-- Secret Number Market main game: each player has crystals and a hidden number; asset score is crystals plus hidden number.
+- Secret Number Market main game: each player has crystals, a hidden number, and round points produced by submitted actions.
+- Crystals are long-term resources for rerolling, trading, and future advantage systems; they are not added directly to round ranking.
 - Real trade settlement: accepted trades transfer crystals and can reveal hidden-number information to each side.
 - Hidden AI relationship model: each directed player relationship tracks trust, betrayal, alliance score, and recent notes for AI decisions only.
 - Safety token gifting: the main-game winner stays safe and can gift a safety token to another active player.

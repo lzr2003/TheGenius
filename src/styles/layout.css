@@ -101,7 +101,7 @@
 
 .private-info-panel {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(180px, 1.2fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   align-items: center;
   padding: 12px 14px;
@@ -124,12 +124,6 @@
   color: #f4c76f;
   font-size: 24px;
   line-height: 1.1;
-}
-.private-info-panel p {
-  margin: 0;
-  color: rgba(246,240,223,.68);
-  font-size: 12px;
-  line-height: 1.45;
 }
 .rule-formula-card {
   border: 1px solid rgba(244,199,111,.22);
@@ -217,8 +211,6 @@
   .bottom-console,
   .main-stage { gap: 10px; }
   .header-actions { max-width: 470px; }
-  .private-info-panel { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .private-info-panel p { grid-column: 1 / -1; }
 }
 
 @media (max-height: 820px) {
@@ -227,5 +219,4 @@
   .settings-drawer { padding: 14px; gap: 10px; }
   .private-info-panel { padding: 10px 12px; }
   .private-info-panel strong { font-size: 21px; }
-  .private-info-panel p { display: none; }
 }

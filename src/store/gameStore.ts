@@ -25,6 +25,7 @@ function normalizeLoadedState(state: GameState): GameState {
   return {
     ...state,
     relationships: state.relationships?.length ? state.relationships : createRelationshipMatrix(state.players),
+    roundPoints: state.roundPoints ?? Object.fromEntries(state.players.map((player) => [player.id, 0])),
   };
 }
 

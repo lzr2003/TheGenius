@@ -15,7 +15,7 @@ export function ResultPanel() {
           <div>危险区：{latest.dangerPlayerId ? nameOf(latest.dangerPlayerId) : '-'}</div>
           <div className="score-list">
             {latest.scores.slice(0, 5).map((score) => (
-              <span key={score.playerId}>{nameOf(score.playerId)}：{score.score}</span>
+              <span key={score.playerId}>{nameOf(score.playerId)}：{score.roundPoints} 分</span>
             ))}
           </div>
         </div>
