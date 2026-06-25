@@ -57,7 +57,7 @@
 .right-rail {
   grid-area: side;
   display: grid;
-  grid-template-rows: minmax(126px, .7fr) minmax(0, 1fr) minmax(0, .9fr);
+  grid-template-rows: minmax(132px, .72fr) minmax(0, 1fr);
   gap: 12px;
 }
 .bottom-console {
@@ -93,5 +93,5 @@
 @media (max-height: 820px) {
   .game-header { padding: 11px 16px; }
   .common-game-layout { grid-template-rows: minmax(0, 1fr) minmax(128px, 170px); }
-  .right-rail { grid-template-rows: minmax(96px, .55fr) minmax(0, .95fr) minmax(0, .85fr); }
+  .right-rail { grid-template-rows: minmax(96px, .56fr) minmax(0, 1fr); }
 }

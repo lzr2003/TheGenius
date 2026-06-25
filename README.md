@@ -20,9 +20,9 @@ It is inspired by social strategy competition mechanics such as public rules, pr
 - Round phase flow: rules, discussion, trade, action, settlement, safety, death match selection, death match, elimination.
 - Secret Number Market main game: each player has crystals and a hidden number; asset score is crystals plus hidden number.
 - Real trade settlement: accepted trades transfer crystals and can reveal hidden-number information to each side.
-- Relationship model: each directed player relationship tracks trust, betrayal, alliance score, and recent notes.
+- Hidden AI relationship model: each directed player relationship tracks trust, betrayal, alliance score, and recent notes for AI decisions only.
 - Safety token gifting: the main-game winner stays safe and can gift a safety token to another active player.
-- AI personality rules: rational, deceptive, cooperative, risky, and conservative AI players use different action, chat, and trade tendencies.
+- AI personality rules: rational, deceptive, cooperative, risky, and conservative AI players use action, chat, trade, and safety-gift decisions based on hidden relationship values.
 - Death Match: a five-round psychological number guessing duel that eliminates the loser.
 - Procedural UI sound effects for clicks, phase changes, submissions, settlement, trade, safety, death match, and elimination.
 - Local save/load through Tauri commands.

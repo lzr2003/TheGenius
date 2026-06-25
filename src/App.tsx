@@ -6,7 +6,6 @@ import { ActionPanel } from './components/ActionPanel';
 import { ChatPanel } from './components/ChatPanel';
 import { DeathMatchPanel } from './components/DeathMatchPanel';
 import { ResultPanel } from './components/ResultPanel';
-import { RelationPanel } from './components/RelationPanel';
 import { SafetyPanel } from './components/SafetyPanel';
 import { useGameStore } from './store/gameStore';
 import { isSoundEnabled, playSfx, setSoundEnabled } from './utils/audio';
@@ -42,7 +41,7 @@ function App() {
         <div className="brand-block">
           <p className="eyebrow">Mind Arena / 智谋竞技场</p>
           <h1>心理博弈桌游客户端原型</h1>
-          <p className="subtitle">公开规则、隐藏信息、晶石交易、信任背叛、安全权赠送、死亡竞赛与淘汰制。</p>
+          <p className="subtitle">公开规则、隐藏信息、晶石交易、安全权赠送、死亡竞赛与淘汰制。AI 会在内部参考信任与背叛关系。</p>
         </div>
         <div className="header-actions">
           <button onClick={() => createNewGame(9)}>新开 9 人局</button>
@@ -64,7 +63,7 @@ function App() {
         <section className="main-stage layout-region">
           {state.phase === 'safety' ? <SafetyPanel /> : state.phase === 'deathmatch' ? <DeathMatchPanel /> : <ActionPanel />}
         </section>
-        <aside className="right-rail layout-region"><RulePanel /><TradePanel /><RelationPanel /></aside>
+        <aside className="right-rail layout-region"><RulePanel /><TradePanel /></aside>
         <section className="bottom-console layout-region"><ResultPanel /><ChatPanel /></section>
       </section>
     </main>
