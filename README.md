@@ -1,5 +1,30 @@
 # Mind Arena / 智谋竞技场
 
-A Tauri + React + TypeScript desktop game prototype inspired by psychological strategy shows and board-game social deduction mechanics.
+Mind Arena is a cross-platform desktop prototype for a psychological strategy board-game client.
 
-This repository is being bootstrapped as a cross-platform client with local simulation, AI players, negotiation, trading, safety tokens, death matches, and match replay logs.
+It is inspired by social strategy competition mechanics such as public rules, private information, negotiation, trade, safety tokens, death matches, and elimination, without copying any show names, logos, characters, or specific copyrighted games.
+
+## Tech stack
+
+- Tauri 2.x
+- Rust
+- React
+- TypeScript
+- Vite
+- Zustand
+- Tailwind CSS
+
+## Development
+
+```bash
+npm install
+npm run tauri dev
+```
+
+## Build
+
+```bash
+npm run tauri build
+```
+
+The first version runs as a local single-player simulation with AI players. Network multiplayer can be added later through a dedicated server or peer session layer.
