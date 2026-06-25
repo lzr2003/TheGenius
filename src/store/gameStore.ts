@@ -13,7 +13,7 @@ interface GameStore {
   createNewGame: (playerCount: number) => void;
   advancePhase: () => void;
   submitHumanAction: (kind: ActionKind, targetPlayerId?: string, guessedNumber?: number) => void;
-  sendChat: (content: string) => void;
+  sendChat: (content: string, toPlayerId?: string, claimedSecretNumber?: number) => void;
   acceptTrade: (tradeId: string) => void;
   rejectTrade: (tradeId: string) => void;
   grantSafety: (targetPlayerId: string) => void;
@@ -57,6 +57,11 @@ function sfxForPhase(state: GameState): void {
   playSfx('phase');
 }
 
+function clampSecret(value?: number): number | undefined {
+  if (typeof value !== 'number' || Number.isNaN(value)) return undefined;
+  return Math.min(9, Math.max(1, Math.round(value)));
+}
+
 export const useGameStore = create<GameStore>((set, get) => ({
   state: createInitialState(),
 
@@ -95,13 +100,31 @@ export const useGameStore = create<GameStore>((set, get) => ({
     return { state: resolvedState };
   }),
 
-  sendChat: (content) => set((store) => {
+  sendChat: (content, toPlayerId, claimedSecretNumber) => set((store) => {
     playSfx('click');
+    const claimed = clampSecret(claimedSecretNumber);
+    const isPrivate = Boolean(toPlayerId);
+    const players = isPrivate && claimed
+      ? store.state.players.map((player) => player.id === toPlayerId ? { ...player, knownInfo: { ...player.knownInfo, human: claimed } } : player)
+      : store.state.players;
+    const messageContent = content || (claimed ? `我声称我的秘密数字是 ${claimed}。` : '');
+
     return {
       state: {
         ...store.state,
-        chatMessages: [...store.state.chatMessages, { id: id('chat'), playerId: 'human', content, round: store.state.round, phase: store.state.phase, createdAt: new Date().toISOString() }],
-        matchLog: [...store.state.matchLog, createLog('CHAT_SENT', `你发言：${content}`)],
+        players,
+        chatMessages: [...store.state.chatMessages, {
+          id: id('chat'),
+          playerId: 'human',
+          toPlayerId,
+          channel: isPrivate ? 'private' : 'public',
+          content: messageContent,
+          claimedSecretNumber: isPrivate ? claimed : undefined,
+          round: store.state.round,
+          phase: store.state.phase,
+          createdAt: new Date().toISOString(),
+        }],
+        matchLog: [...store.state.matchLog, createLog('CHAT_SENT', isPrivate ? '你发送了一条私聊信息。' : `你发言：${messageContent}`)],
       },
     };
   }),

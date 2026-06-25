@@ -4,6 +4,12 @@ Mind Arena is a cross-platform desktop prototype for a psychological strategy bo
 
 It is inspired by social strategy competition mechanics such as public rules, private information, negotiation, trade, safety tokens, death matches, and elimination, without copying any show names, logos, characters, or specific copyrighted games.
 
+## Product direction
+
+- Multiplayer-first psychological board-game client.
+- AI players are a single-player compatibility layer for local testing and offline play.
+- Private chat is the main channel for exchanging or bluffing hidden-number information.
+
 ## Tech stack
 
 - Tauri 2.x
@@ -19,8 +25,10 @@ It is inspired by social strategy competition mechanics such as public rules, pr
 
 - Round phase flow: rules, discussion, trade, action, settlement, safety, death match selection, death match, elimination.
 - Secret Number Market main game: each player has crystals, a hidden number, and round points produced by submitted actions.
+- Formal actions are hold, reroll, and guess; there is no direct card-swap action.
+- Hidden numbers are exchanged as information through public chat or private chat. Players may tell the truth or lie.
 - Crystals are long-term resources for rerolling, trading, and future advantage systems; they are not added directly to round ranking.
-- Real trade settlement: accepted trades transfer crystals and can reveal hidden-number information to each side.
+- Real trade settlement: accepted trades transfer crystals and can include information promises.
 - Hidden AI relationship model: each directed player relationship tracks trust, betrayal, alliance score, and recent notes for AI decisions only.
 - Safety token gifting: the main-game winner stays safe and can gift a safety token to another active player.
 - AI personality rules: rational, deceptive, cooperative, risky, and conservative AI players use action, chat, trade, and safety-gift decisions based on hidden relationship values.

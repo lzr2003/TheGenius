@@ -7,14 +7,14 @@ export function TradePanel() {
 
   return (
     <section className="panel trade-panel">
-      <div className="panel-title">秘密交易</div>
-      {trades.length === 0 && <p className="muted">当前没有交易请求。进入交易阶段后 AI 会主动提出交易。</p>}
+      <div className="panel-title">晶石交易</div>
+      {trades.length === 0 && <p className="muted">当前没有交易请求。多人联机中交易应由玩家协商；单机兼容时 AI 会主动提出交易。</p>}
       {trades.map((trade) => (
         <article className="trade-card" key={trade.id}>
           <div>{nameOf(trade.fromPlayerId)} → {nameOf(trade.toPlayerId)}</div>
           <p>提供 {trade.offeredCrystals} 晶石，索要 {trade.requestedCrystals} 晶石</p>
           <p>{trade.offeredInfo ?? '无公开情报'} / {trade.requestedInfo ?? '无请求情报'}</p>
-          <p className="muted">接受后会真实转移晶石；如果包含情报条款，会把秘密数字写入双方已知情报。</p>
+          <p className="muted">晶石交易是资源交换；数字情报主要通过私聊发送，可能真实也可能虚假。</p>
           <strong>{trade.status}</strong>
           {trade.status === 'pending' && trade.toPlayerId === 'human' && (
             <div className="inline-actions">

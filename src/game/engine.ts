@@ -1,4 +1,4 @@
-import type { ActionSubmission, GamePhase, GameState, Player } from './types';
+import type { ActionSubmission, ChatMessage, GamePhase, GameState, Player } from './types';
 import { createAiChat, createAiTrade, decideAiAction } from './ai';
 import { createDeathMatch, playDeathMatchRound } from './deathmatch';
 import { createLog } from './mock';
@@ -25,6 +25,17 @@ function resetRoundPoints(players: Player[]): Record<string, number> {
   return Object.fromEntries(players.filter((player) => player.status !== 'eliminated').map((player) => [player.id, 0]));
 }
 
+function applyPrivateClaims(players: Player[], messages: ChatMessage[]): Player[] {
+  const cloned = players.map((player) => ({ ...player, knownInfo: { ...player.knownInfo } }));
+  for (const message of messages) {
+    if (message.channel !== 'private' || !message.toPlayerId || typeof message.claimedSecretNumber !== 'number') continue;
+    const recipient = cloned.find((player) => player.id === message.toPlayerId);
+    if (!recipient) continue;
+    recipient.knownInfo[message.playerId] = message.claimedSecretNumber;
+  }
+  return cloned;
+}
+
 function fillAiActions(state: GameState): ActionSubmission[] {
   const existing = new Set(state.actionSubmissions.map((action) => action.playerId));
   const aiActions = state.players
@@ -42,7 +53,8 @@ export function advanceGamePhase(state: GameState): GameState {
 
   if (state.phase === 'discussion') {
     const aiMessages = state.players.filter((player) => !player.isHuman && player.status !== 'eliminated').slice(0, 3).map((player) => createAiChat(state, player));
-    return { ...state, phase: 'trade', chatMessages: [...state.chatMessages, ...aiMessages], matchLog: [...state.matchLog, createLog('PHASE_CHANGED', '进入秘密交易阶段。')] };
+    const players = applyPrivateClaims(state.players, aiMessages);
+    return { ...state, players, phase: 'trade', chatMessages: [...state.chatMessages, ...aiMessages], matchLog: [...state.matchLog, createLog('PHASE_CHANGED', '进入秘密交易阶段。')] };
   }
 
   if (state.phase === 'trade') {

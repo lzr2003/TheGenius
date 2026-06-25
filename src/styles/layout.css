@@ -95,9 +95,25 @@
 .action-panel,
 .safety-panel,
 .death-panel { align-content: start; }
-.action-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.action-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .action-grid button { white-space: normal; }
 .submitted-preview { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+
+.chat-compose {
+  display: grid;
+  gap: 8px;
+}
+.chat-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.chat-message small {
+  display: inline-block;
+  margin-top: 4px;
+  color: #f4c76f;
+  font-size: 12px;
+}
 
 .private-info-panel {
   display: grid;

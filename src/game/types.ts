@@ -45,7 +45,10 @@ export interface SafetyToken {
 export interface ChatMessage {
   id: string;
   playerId: string;
+  toPlayerId?: string;
+  channel?: 'public' | 'private';
   content: string;
+  claimedSecretNumber?: number;
   round: number;
   phase: GamePhase;
   createdAt: string;
@@ -64,7 +67,7 @@ export interface TradeOffer {
   status: 'pending' | 'accepted' | 'rejected' | 'cancelled';
 }
 
-export type ActionKind = 'hold' | 'reroll' | 'swap' | 'guess';
+export type ActionKind = 'hold' | 'reroll' | 'guess';
 
 export interface ActionSubmission {
   playerId: string;
