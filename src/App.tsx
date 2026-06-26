@@ -8,6 +8,7 @@ import { ResultPanel } from './components/ResultPanel';
 import { SafetyPanel } from './components/SafetyPanel';
 import { SettingsPanel } from './components/SettingsPanel';
 import { PrivateInfoPanel } from './components/PrivateInfoPanel';
+import { VoiceEmotionPanel } from './components/VoiceEmotionPanel';
 import { useGameStore } from './store/gameStore';
 import { isSoundEnabled, playSfx, setSoundEnabled } from './utils/audio';
 
@@ -59,6 +60,7 @@ function App() {
         <div><span>回合</span><strong>{state.round}</strong></div>
         <div><span>当前阶段</span><strong>{phaseNames[state.phase]}</strong></div>
         <div><span>存活玩家</span><strong>{state.players.filter((player) => player.status !== 'eliminated').length}</strong></div>
+        <VoiceEmotionPanel />
         <button onClick={advancePhase}>推进阶段</button>
       </section>
 
