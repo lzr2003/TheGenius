@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export type VoiceMood = 'silent' | 'neutral' | 'excited' | 'tense' | 'lowEnergy';
+export type VoiceMood = 'silent' | 'neutral' | 'excited' | 'angry' | 'tense' | 'confused' | 'sinister';
 export type VoicePermissionState = 'idle' | 'requesting' | 'granted' | 'denied' | 'unsupported';
 
 export interface VoiceMoodSnapshot {
@@ -11,6 +11,7 @@ export interface VoiceMoodSnapshot {
   energy: number;
   pitch: number;
   zcr: number;
+  roughness: number;
 }
 
 const MOOD_META: Record<VoiceMood, Pick<VoiceMoodSnapshot, 'emoji' | 'label' | 'description'>> = {
@@ -27,17 +28,27 @@ const MOOD_META: Record<VoiceMood, Pick<VoiceMoodSnapshot, 'emoji' | 'label' | '
   excited: {
     emoji: '🤩',
     label: '兴奋',
-    description: '音量和音高偏高',
+    description: '音量和音高偏高，表现为积极高能量',
+  },
+  angry: {
+    emoji: '😡',
+    label: '生气',
+    description: '音量较高且冲击感强，表现为强烈负向能量',
   },
   tense: {
-    emoji: '😠',
+    emoji: '😰',
     label: '紧张',
-    description: '语音冲击感偏强',
+    description: '语音尖锐或抖动感偏强，表现为不稳定高压状态',
   },
-  lowEnergy: {
-    emoji: '😴',
-    label: '低能量',
-    description: '音量和音高偏低',
+  confused: {
+    emoji: '🤔',
+    label: '困惑',
+    description: '能量中等且音高偏飘，表现为犹豫或疑问感',
+  },
+  sinister: {
+    emoji: '😈',
+    label: '阴险',
+    description: '音量偏低且音高偏低，表现为压低声音的诡秘感',
   },
 };
 
@@ -47,6 +58,7 @@ const DEFAULT_SNAPSHOT: VoiceMoodSnapshot = {
   energy: 0,
   pitch: 0,
   zcr: 0,
+  roughness: 0,
 };
 
 function clamp01(value: number) {
@@ -69,6 +81,15 @@ function computeZeroCrossingRate(samples: Float32Array) {
     }
   }
   return crossings / samples.length;
+}
+
+function computeRoughness(samples: Float32Array) {
+  let deltaSum = 0;
+  for (let i = 1; i < samples.length; i += 1) {
+    deltaSum += Math.abs(samples[i] - samples[i - 1]);
+  }
+
+  return clamp01(deltaSum / samples.length / 0.08);
 }
 
 function estimatePitch(samples: Float32Array, sampleRate: number, rms: number) {
@@ -100,24 +121,38 @@ function estimatePitch(samples: Float32Array, sampleRate: number, rms: number) {
   return sampleRate / bestLag;
 }
 
-function classifyMood(rms: number, pitch: number, zcr: number): VoiceMood {
+function classifyMood(rms: number, pitch: number, zcr: number, roughness: number): VoiceMood {
   const energy = clamp01(rms / 0.12);
+  const hasPitch = pitch > 0;
 
   if (rms < 0.012) return 'silent';
-  if (energy > 0.48 && pitch > 185 && zcr < 0.16) return 'excited';
-  if (energy > 0.42 && (zcr > 0.105 || pitch > 235)) return 'tense';
-  if (energy < 0.22 && pitch > 0 && pitch < 155) return 'lowEnergy';
+
+  // 高能量、强冲击、偏嘈杂，优先判为生气，避免都落入“兴奋”。
+  if (energy > 0.58 && (roughness > 0.34 || zcr > 0.12)) return 'angry';
+
+  // 高能量但相对明亮稳定，更像兴奋。
+  if (energy > 0.46 && hasPitch && pitch > 175 && zcr < 0.16) return 'excited';
+
+  // 中高能量、尖锐或不稳定，但未到生气强度，作为紧张。
+  if (energy > 0.36 && (zcr > 0.11 || roughness > 0.28 || pitch > 245)) return 'tense';
+
+  // 低声、低音高，适合游戏里的“阴险/诡秘”表情。
+  if (energy < 0.34 && (!hasPitch || pitch < 145) && zcr < 0.09) return 'sinister';
+
+  // 中等能量、音高偏高或略不稳定，作为困惑/疑问感。
+  if (energy >= 0.22 && energy <= 0.48 && (pitch > 165 || roughness > 0.18 || zcr > 0.075)) return 'confused';
 
   return 'neutral';
 }
 
-function toSnapshot(mood: VoiceMood, rms: number, pitch: number, zcr: number): VoiceMoodSnapshot {
+function toSnapshot(mood: VoiceMood, rms: number, pitch: number, zcr: number, roughness: number): VoiceMoodSnapshot {
   return {
     mood,
     ...MOOD_META[mood],
     energy: clamp01(rms / 0.12),
     pitch,
     zcr,
+    roughness,
   };
 }
 
@@ -127,7 +162,7 @@ function getSmoothedMood(history: VoiceMood[]) {
       acc[mood] += 1;
       return acc;
     },
-    { silent: 0, neutral: 0, excited: 0, tense: 0, lowEnergy: 0 },
+    { silent: 0, neutral: 0, excited: 0, angry: 0, tense: 0, confused: 0, sinister: 0 },
   );
 
   return history.reduce<VoiceMood>((winner, mood) => (scores[mood] >= scores[winner] ? mood : winner), history[0] ?? 'silent');
@@ -173,13 +208,14 @@ export function useVoiceMood(updateMs = 900) {
 
     const rms = computeRms(samples);
     const zcr = computeZeroCrossingRate(samples);
+    const roughness = computeRoughness(samples);
     const pitch = estimatePitch(samples, context.sampleRate, rms);
-    const mood = classifyMood(rms, pitch, zcr);
+    const mood = classifyMood(rms, pitch, zcr, roughness);
 
     historyRef.current = [...historyRef.current.slice(-2), mood];
     const smoothedMood = getSmoothedMood(historyRef.current);
 
-    setSnapshot(toSnapshot(smoothedMood, rms, pitch, zcr));
+    setSnapshot(toSnapshot(smoothedMood, rms, pitch, zcr, roughness));
   }, []);
 
   const start = useCallback(async () => {
