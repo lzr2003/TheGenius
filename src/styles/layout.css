@@ -236,3 +236,96 @@
   .private-info-panel { padding: 10px 12px; }
   .private-info-panel strong { font-size: 21px; }
 }
+
+.status-strip {
+  grid-template-columns: minmax(0, .76fr) minmax(0, 1.05fr) minmax(0, .76fr) minmax(330px, 1.35fr) auto;
+}
+
+.voice-emotion-panel {
+  min-width: 0;
+  border: 1px solid rgba(143, 108, 255, .22);
+  background: linear-gradient(135deg, rgba(143,108,255,.14), rgba(244,199,111,.08));
+  border-radius: 18px;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+}
+.voice-emotion-panel.listening {
+  border-color: rgba(71, 218, 166, .42);
+  box-shadow: inset 0 0 24px rgba(71, 218, 166, .06);
+}
+.voice-emotion-face {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  background: rgba(255,255,255,.09);
+}
+.voice-emotion-main {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+.voice-emotion-title-row {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.voice-emotion-title-row .voice-emotion-kicker {
+  color: #8fd7ff;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+.voice-emotion-title-row strong {
+  color: #f4c76f;
+  font-size: 16px;
+  line-height: 1;
+}
+.voice-emotion-title-row em {
+  margin-left: auto;
+  color: rgba(246,240,223,.5);
+  font-size: 11px;
+  font-style: normal;
+  white-space: nowrap;
+}
+.voice-emotion-panel p {
+  margin: 0;
+  color: rgba(246,240,223,.68);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.voice-emotion-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.voice-emotion-metrics span {
+  color: rgba(246,240,223,.58);
+  font-size: 10px;
+}
+.voice-meter {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.09);
+}
+.voice-meter-fill {
+  height: 100%;
+  min-width: 2px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(71,218,166,.65), rgba(244,199,111,.9));
+  transition: width .2s ease;
+}
+.voice-emotion-button {
+  min-width: 58px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
