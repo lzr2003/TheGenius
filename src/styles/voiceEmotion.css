@@ -1,0 +1,37 @@
+.voice-emotion-panel.mood-neutral {
+  border-color: rgba(143, 215, 255, .24);
+}
+.voice-emotion-panel.mood-excited {
+  border-color: rgba(244, 199, 111, .5);
+  background: linear-gradient(135deg, rgba(244,199,111,.17), rgba(255,255,255,.05));
+}
+.voice-emotion-panel.mood-angry {
+  border-color: rgba(255, 101, 101, .6);
+  background: linear-gradient(135deg, rgba(255,101,101,.16), rgba(244,199,111,.07));
+}
+.voice-emotion-panel.mood-tense {
+  border-color: rgba(143, 215, 255, .5);
+  background: linear-gradient(135deg, rgba(143,215,255,.15), rgba(143,108,255,.08));
+}
+.voice-emotion-panel.mood-confused {
+  border-color: rgba(143, 108, 255, .55);
+  background: linear-gradient(135deg, rgba(143,108,255,.18), rgba(143,215,255,.08));
+}
+.voice-emotion-panel.mood-sinister {
+  border-color: rgba(190, 121, 255, .58);
+  background: linear-gradient(135deg, rgba(116,45,160,.22), rgba(5,7,14,.18));
+}
+.voice-emotion-panel.mood-silent {
+  opacity: .82;
+}
+
+.voice-emotion-panel.mood-angry .voice-meter-fill {
+  background: linear-gradient(90deg, rgba(255,101,101,.7), rgba(244,199,111,.95));
+}
+.voice-emotion-panel.mood-tense .voice-meter-fill,
+.voice-emotion-panel.mood-confused .voice-meter-fill {
+  background: linear-gradient(90deg, rgba(143,215,255,.72), rgba(143,108,255,.95));
+}
+.voice-emotion-panel.mood-sinister .voice-meter-fill {
+  background: linear-gradient(90deg, rgba(143,108,255,.7), rgba(190,121,255,.95));
+}
