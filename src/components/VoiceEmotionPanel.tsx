@@ -24,8 +24,8 @@ export function VoiceEmotionPanel() {
         <div className="voice-emotion-metrics" aria-label="语音状态指标">
           <span>能量 {Math.round(snapshot.energy * 100)}%</span>
           <span>音高 {formatPitch(snapshot.pitch)}</span>
-          <span>ZCR {snapshot.zcr.toFixed(3)}</span>
-          <span>粗糙 {Math.round(snapshot.roughness * 100)}%</span>
+          <span>锐度 {snapshot.zcr.toFixed(3)}</span>
+          <span>冲击 {Math.round(snapshot.roughness * 100)}%</span>
         </div>
         <div className="voice-meter" aria-hidden="true">
           <div className="voice-meter-fill" style={{ width: `${Math.round(snapshot.energy * 100)}%` }} />
