@@ -12,7 +12,7 @@ export function VoiceEmotionPanel() {
   const canStart = permissionState !== 'requesting' && permissionState !== 'unsupported';
 
   return (
-    <div className={`voice-emotion-panel ${isListening ? 'listening' : ''}`}>
+    <div className={`voice-emotion-panel mood-${snapshot.mood} ${isListening ? 'listening' : ''}`}>
       <div className="voice-emotion-face" aria-hidden="true">{snapshot.emoji}</div>
       <div className="voice-emotion-main">
         <div className="voice-emotion-title-row">
@@ -25,6 +25,7 @@ export function VoiceEmotionPanel() {
           <span>能量 {Math.round(snapshot.energy * 100)}%</span>
           <span>音高 {formatPitch(snapshot.pitch)}</span>
           <span>ZCR {snapshot.zcr.toFixed(3)}</span>
+          <span>粗糙 {Math.round(snapshot.roughness * 100)}%</span>
         </div>
         <div className="voice-meter" aria-hidden="true">
           <div className="voice-meter-fill" style={{ width: `${Math.round(snapshot.energy * 100)}%` }} />
